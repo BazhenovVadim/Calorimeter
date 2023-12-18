@@ -53,16 +53,32 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.gender = self.radioButton_woman.text()
 
     def get_age(self):
-        if self.lineEdit_age.editingFinished:
+        if self.lineEdit_age.text().isdigit() and self.lineEdit_age.text() != "":
             self.age = int(self.lineEdit_age.text())
+        else:
+            self.dialog_age = QMessageBox.critical(self, "Трудный возраст",
+                                                   "Поле не может быть пустым или содержать буквы")
+            self.lineEdit_age.clear()
+            self.age = None
 
     def get_height(self):
-        if self.lineEdit_height.editingFinished:
+        if self.lineEdit_height.text().isdigit() and self.lineEdit_height.text() != "":
             self.height = int(self.lineEdit_height.text())
+        else:
+            self.dialog_height = QMessageBox.critical(self, "Рост", "Поле не может быть пустым или содержать буквы")
+            self.lineEdit_height.clear()
+            self.height = None
+
 
     def get_weight(self):
-        if self.lineEdit_weight.editingFinished:
+        if self.lineEdit_weight.text().isdigit() and self.lineEdit_weight.text() != "":
             self.weight = int(self.lineEdit_weight.text())
+        else:
+            self.dialog_weight = QMessageBox.critical(self, "Трудный возраст",
+                                                      "Поле не может быть пустым или содержать буквы")
+            self.lineEdit_weight.clear()
+            self.weight = None
+
 
     def get_lifestyle(self):
         self.lifestyle = self.comboBox_your_lifestyle.currentText()
@@ -76,6 +92,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             }
 
         self.coof_activity = float(self.dict_activity[self.lifestyle])
+
 
     def get_purpose(self):
         if self.radioButton_minus_weight.isChecked():
@@ -103,23 +120,28 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 "набрать вес": 2.5,
                 "сохранить вес": 1.1,
             }
-        self.dict_yglevods = \
+        self.dict_carbs = \
             {
-                "сбросить вес": 1.5 ,
+                "сбросить вес": 1.5,
                 "набрать вес": 4,
                 "сохранить вес": 3,
             }
-        self.dict_zhirs = \
+        self.dict_fats = \
             {
                 "сбросить вес": 1,
                 "набрать вес": 2,
                 "сохранить вес": 1.5,
             }
-        self.protein = self.weight * self.dict_protein[self.purpose]
-        self.yglevods = self.weight * self.dict_yglevods[self.purpose]
-        self.zhirs = self.weight * 0.5
         self.recomend_text = self.dict_for_list[self.purpose]
-        self.coof_by_purpose = self.dict_purpose_cal[self.purpose]
+        if self.weight:
+            self.protein = self.weight * self.dict_protein[self.purpose]
+            self.carbs = self.weight * self.dict_carbs[self.purpose]
+            self.fats = self.weight * 0.5
+            self.coof_by_purpose = self.dict_purpose_cal[self.purpose]
+        else:
+            self.dialog_weight = QMessageBox.critical(self, "Не могу рассчитать параметры",
+                                                      "Заполни все предыдущие поля")
+
 
     def calculate_day_normal(self):
         if self.pushButton_calculate_daily_allowance.clicked:
@@ -151,8 +173,9 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_daily_allowance.addItem("Суточная норма калорий" +
                                                         str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
                 self.listWidget_daily_allowance.addItem(f"белков {self.protein}")
-                self.listWidget_daily_allowance.addItem(f"жиров {self.zhirs}")
-                self.listWidget_daily_allowance.addItem(f"углеводов {self.yglevods}")
+                self.listWidget_daily_allowance.addItem(f"жиров {self.fats}")
+                self.listWidget_daily_allowance.addItem(f"углеводов {self.carbs}")
+
 
     def clear_settings_day_normal(self):
         if self.pushButton_clear_daily_allowance.clicked:
