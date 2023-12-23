@@ -13,3 +13,6 @@ if product_new.product_name not in products:
     session.commit()
 session.close()
 
+
+
+

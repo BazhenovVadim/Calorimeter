@@ -1,9 +1,10 @@
 import sys
 
 # Импортируем из PyQt5.QtWidgets классы для создания приложения и виджета
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QMainWindow, QCheckBox, QButtonGroup, \
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
     QMessageBox
-from calorimeter_designer import Ui_MainWindow
+from ui_files.calorimeter_designer import Ui_MainWindow
+from data_base import *
 
 
 # from metods_to_calculate import harris_benedict_metod, mifflin_metod
@@ -24,6 +25,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.coof_by_purpose = None
         self.bmr_cal_mifflin = None
         self.bmr_cal_harris = None
+        self.name_product = None
+        self.weight_product = None
         self.tabWidget.setCurrentWidget(self.tab_daily_allowance)
         self.groop_radiobutton_gender = QButtonGroup()
         self.groop_radiobutton_gender.addButton(self.radioButton_man)
@@ -45,6 +48,10 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.lineEdit_age.editingFinished.connect(self.get_age)
         self.lineEdit_height.editingFinished.connect(self.get_height)
         self.lineEdit_weight.editingFinished.connect(self.get_weight)
+        self.lineEdit_write_product.editingFinished.connect(self.get_name_product)
+        self.lineEdit_write_weight.editingFinished.connect(self.get_weight_product)
+        self.pushButton_add_product.clicked.connect(self.add_product_to_list)
+        self.pushButton_clear_product.clicked.connect(self.clear_data_in_lineEdit)
 
     def check_gender(self):
         if self.radioButton_man.isChecked():
@@ -204,6 +211,44 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.bmr_cal_harris = None
 
 
+    def get_name_product(self):
+        if self.lineEdit_write_product.text() != "" and self.lineEdit_write_product.text().isalpha():
+            self.name_product = self.lineEdit_write_product.text().capitalize()
+        else:
+            self.dialog_name_product = QMessageBox.critical(self, "Название продукта", "Могут быть только буквы")
+            self.lineEdit_write_product.clear()
+            self.name_product = None
+
+    def get_weight_product(self):
+        if self.lineEdit_write_weight.text() != "" and self.lineEdit_write_weight.text().isdigit():
+            self.weight_product = int(self.lineEdit_write_weight.text())
+        else:
+            self.dialog_weight_product = QMessageBox.critical(self, "Вес продукта", "Могут быть только цифры")
+            self.lineEdit_write_weight.clear()
+            self.weight_product = None
+
+    def add_product_to_list(self):
+        session = session_factory()
+
+        self.products_in_database = session.query(Products).all()
+        self.products = [str(x) for x in self.products_in_database]
+        if self.pushButton_add_product.clicked and self.name_product in self.products:
+            self.listWidget_spisok_products.addItem(self.name_product + str(self.weight_product))
+
+    def clear_data_in_lineEdit(self):
+        if self.pushButton_clear_product.clicked:
+            self.lineEdit_write_product.clear()
+            self.lineEdit_write_weight.clear()
+            self.name_product = None
+            self.weight_product = None
+
+
+#TODO: добавить разделение в таблице сдобавленными продуктами
+#TODO: рассчитать каллории с учетом веса продукта
+#TODO:добавить возможность удалять  продукт, занесенный в список продуктов
+#TODO нельзя вводить английские буквы
+#TODO добавить диалоговое окно с предложение заменить если его нет но название похоже. Диалог окно что все поля должны быть заполнены
+#
 sys._excepthook = sys.excepthook
 
 
