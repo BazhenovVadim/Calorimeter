@@ -8,11 +8,11 @@ print(products)
 product_new = Products(product_name='Пюре', proteins=2.5, fats=4.2, carbs=14.7, calories=106)
 print(product_new.product_name)
 
-if product_new.product_name in products:
-    print('go away')
-else:
+if product_new.product_name not in products:
     session.add(product_new)
     session.commit()
 session.close()
+
+
 
 
