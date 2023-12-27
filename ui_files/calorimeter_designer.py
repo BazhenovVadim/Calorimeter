@@ -374,7 +374,7 @@ class Ui_MainWindow(object):
                     border-bottom: 4px solid {shadow};
                 }}''')
 
-        color2 = QColor(255, 65, 2)
+        color2 = QColor(255, 180, 200)
         shadow = color2.darker(115).name()
         text = "white"
         self.pushButton_add_product.setStyleSheet(f'''

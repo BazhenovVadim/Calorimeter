@@ -284,16 +284,12 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
 
     def clear_products_list(self):
         if self.pushButton_2.clicked:
-            self.list_items = self.listWidget_spisok_products.item(-1)
-            self.listWidget_spisok_products.removeItemWidget(self.list_items)
-            
-            # if not self.list_items:
-            #     self.dialog_list = QMessageBox.critical(self, "Ошибка",
-            #                                             "Похоже, вы не выбрали строчку для удаления")
-            #
-            # for item in self.list_items:
-            #     self.listWidget_spisok_products.removeItemWidget(
-            #         self.listWidget_spisok_products.takeItem(self.listWidget_spisok_products.row(item)))
+            if not self.listWidget_spisok_products.selectedItems():
+                dialog_row = QMessageBox.critical(self, "Выберите строчку", "Нельзя удалить")
+            current_row = self.listWidget_spisok_products.currentRow()
+            if current_row >= 0:
+                current_item = self.listWidget_spisok_products.takeItem(current_row)
+                del current_item
 
     def clear_all_products(self):
         if self.pushButton_table2_clear_all.clicked:
@@ -303,7 +299,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.fats_result = 0
             self.carbs_result = 0
             self.calories_result = 0
-
 
     def add_result_list(self):
 
@@ -342,23 +337,31 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
     def clear_result_list_after_one_clear(self):
         session = session_factory()
         product = session.query(Products).where(Products.product_name == self.name_product).first()
-        if self.pushButton_2.clicked and (
-                self.name_product is not None) and self.name_product != '' and self.name_product:
+        self.list = [self.listWidget_spisok_products.item for x in range(self.listWidget_spisok_products.count())]
 
-                self.weight_result -= self.weight_product
-                self.proteins_result -= product.proteins * (self.weight_product / 100)
-                self.fats_result -= product.fats * (self.weight_product / 100)
-                self.carbs_result -= product.carbs * (self.weight_product / 100)
-                self.calories_result -= product.calories * (self.weight_product / 100)
+        if self.pushButton_2.clicked and len(self.list) > 0:
+            self.listWidget_result_ration.clear()
+            self.weight_result -= self.weight_product
+            self.proteins_result -= product.proteins * (self.weight_product / 100)
+            self.fats_result -= product.fats * (self.weight_product / 100)
+            self.carbs_result -= product.carbs * (self.weight_product / 100)
+            self.calories_result -= product.calories * (self.weight_product / 100)
+            print(self.weight_result, self.proteins_result)
+
+            print(*self.list)
+            if len(str(int(self.weight_product))) <= 4:
+                self.listWidget_result_ration.addItem(
+                    str(round(self.weight_result, 1)) + ' ' * 17 + str(round(self.proteins_result, 1)) + ' ' * 22 + str(
+                        round(self.fats_result, 1)) + ' ' * 22 + str(round(self.carbs_result, 1)) + ' ' * 23 + str(
+                        round(self.calories_result, 1)))
+            else:
+                self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
+                                                               "Похоже, вы умерли от переедания")
+            if self.weight_result == 0:
                 self.listWidget_result_ration.clear()
-                if len(str(int(self.weight_product))) <= 4:
-                    self.listWidget_result_ration.addItem(
-                        str(round(self.weight_result, 1)) + ' ' * 17 + str(round(self.proteins_result, 1)) + ' ' * 22 + str(
-                            round(self.fats_result, 1)) + ' ' * 22 + str(round(self.carbs_result, 1)) + ' ' * 23 + str(
-                            round(self.calories_result, 1)))
-                else:
-                    self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
-                                                                   "Похоже, вы умерли от переедания")
+        else:
+            self.listWidget_result_ration.clear()
+
 
 
 # TODO добавить обновление итогового списка изза удаления продуктов
