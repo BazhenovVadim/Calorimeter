@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# pyuic5 calorimeter.ui -o calorimeter_designer.py
 # Form implementation generated from reading ui file 'calorimeter.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
@@ -281,7 +281,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12.addWidget(self.label_calories_result)
         self.verticalLayout_12.addLayout(self.horizontalLayout_12)
         self.listWidget_result_ration = QtWidgets.QListWidget(self.groupBox_choose_ration)
-        self.listWidget_result_ration.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.listWidget_result_ration.setMaximumSize(QtCore.QSize(16777215, 60))
         self.listWidget_result_ration.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         self.listWidget_result_ration.setObjectName("listWidget_result_ration")
         self.verticalLayout_12.addWidget(self.listWidget_result_ration)
@@ -374,14 +374,14 @@ class Ui_MainWindow(object):
         self.pushButton_clear_daily_allowance.setText(_translate("MainWindow", "Сбросить"))
         self.pushButton_calculate_daily_allowance.setText(_translate("MainWindow", "Расчитать"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_daily_allowance), _translate("MainWindow", "Расчет суточной нормы"))
-        self.label_write_product.setText(_translate("MainWindow", "                      Продукт"))
-        self.label_write_weight.setText(_translate("MainWindow", "                       Вес, гр"))
+        self.label_write_product.setText(_translate("MainWindow", " Продукт"))
+        self.label_write_weight.setText(_translate("MainWindow", "Вес, гр"))
         self.pushButton_clear_product.setText(_translate("MainWindow", "Очистить"))
         self.pushButton_add_product.setText(_translate("MainWindow", "Добавить"))
         self.label_products.setText(_translate("MainWindow", "Продукты"))
         self.label_weight_products.setText(_translate("MainWindow", "Вес, гр"))
         self.label_calories_products.setText(_translate("MainWindow", "Калории"))
-        self.pushButton_2.setText(_translate("MainWindow", "Очистить последнюю запись"))
+        self.pushButton_2.setText(_translate("MainWindow", "Очистить выбранную запись"))
         self.pushButton_table2_clear_all.setText(_translate("MainWindow", "Очистить всё"))
         self.label_result.setText(_translate("MainWindow", "ИТОГО"))
         self.label_weight_ration_result.setText(_translate("MainWindow", "Вес, гр"))

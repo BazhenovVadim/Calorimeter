@@ -341,7 +341,7 @@
                    <item>
                     <widget class="QLabel" name="label_write_product">
                      <property name="text">
-                      <string>                      Продукт</string>
+                      <string> Продукт</string>
                      </property>
                     </widget>
                    </item>
@@ -358,7 +358,7 @@
                       <enum>Qt::LeftToRight</enum>
                      </property>
                      <property name="text">
-                      <string>                       Вес, гр</string>
+                      <string>Вес, гр</string>
                      </property>
                     </widget>
                    </item>
@@ -481,7 +481,7 @@
                  <item>
                   <widget class="QPushButton" name="pushButton_2">
                    <property name="text">
-                    <string>Очистить последнюю запись</string>
+                    <string>Очистить выбранную запись</string>
                    </property>
                   </widget>
                  </item>
@@ -601,7 +601,7 @@
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>50</height>
+                       <height>60</height>
                       </size>
                      </property>
                      <property name="contextMenuPolicy">
