@@ -194,13 +194,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_daily_allowance.addItem(f"жиров {self.fats}")
                 self.listWidget_daily_allowance.addItem(f"углеводов {self.carbs}")
 
-
-
-
-
-
-
-
     def clear_settings_day_normal(self):
         if self.pushButton_clear_daily_allowance.clicked:
             self.groop_radiobutton_gender.setExclusive(False)
@@ -227,7 +220,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.bmr_cal_mifflin = None
             self.bmr_cal_harris = None
 
-
     def get_name_product(self):
         if self.lineEdit_write_product.text() != "":
             self.name_product = self.lineEdit_write_product.text().strip().capitalize()
@@ -235,7 +227,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.dialog_weight_product = QMessageBox.critical(self, "Продукты", "Введите корректное название")
             self.lineEdit_write_weight.clear()
             self.name_product = None
-
 
     def get_weight_product(self):
         if self.lineEdit_write_weight.text() != "" and str(self.lineEdit_write_weight.text()).strip().isdigit():
@@ -245,7 +236,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.lineEdit_write_weight.clear()
             self.weight_product = None
 
-
     def get_calories(self):
         session = session_factory()
         if (self.name_product is None) or self.name_product == '':
@@ -254,7 +244,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         else:
             product = session.query(Products).where(Products.product_name == self.name_product).first()
             self.calories = product.calories * (self.weight_product / 100)
-
 
     def add_product_to_list(self):
         session = session_factory()
@@ -289,7 +278,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.lineEdit_write_product.clear()
             self.name_product = None
 
-
     def clear_data_in_lineEdit(self):
         if self.pushButton_clear_product.clicked:
             self.lineEdit_write_product.clear()
@@ -297,20 +285,15 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.name_product = None
             self.weight_product = None
 
-
     def clear_products_list(self):
         if self.pushButton_2.clicked:
-            self.list_items = self.listWidget_spisok_products.item(-1)
-            self.listWidget_spisok_products.removeItemWidget(self.list_items)
-
-            # if not self.list_items:
-            #     self.dialog_list = QMessageBox.critical(self, "Ошибка",
-            #                                             "Похоже, вы не выбрали строчку для удаления")
-            #
-            # for item in self.list_items:
-            #     self.listWidget_spisok_products.removeItemWidget(
-            #         self.listWidget_spisok_products.takeItem(self.listWidget_spisok_products.row(item)))
-
+            if not self.listWidget_spisok_products.selectedItems():
+                dialog_row = QMessageBox.critical(self, "Нельзя удалить",
+                                                  "Выберите хотя бы одну строку или добавьте продукт")
+            current_row = self.listWidget_spisok_products.currentRow()
+            if current_row >= 0:
+                current_item = self.listWidget_spisok_products.takeItem(current_row)
+                del current_item
 
     def clear_all_products(self):
         if self.pushButton_table2_clear_all.clicked:
@@ -320,7 +303,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.fats_result = 0
             self.carbs_result = 0
             self.calories_result = 0
-
 
     def add_result_list(self):
         session = session_factory()
@@ -351,24 +333,25 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.weight_product = None
         session.close()
 
-
     def clear_result_list_after_clear_all(self):
         if self.pushButton_table2_clear_all.clicked:
             self.listWidget_result_ration.clear()
 
-
     def clear_result_list_after_one_clear(self):
         session = session_factory()
         product = session.query(Products).where(Products.product_name == self.name_product).first()
-        if self.pushButton_2.clicked and (
-                self.name_product is not None) and self.name_product != '' and self.name_product:
+        self.list = [self.listWidget_spisok_products.item for x in range(self.listWidget_spisok_products.count())]
 
+        if self.pushButton_2.clicked and len(self.list) > 0:
+            self.listWidget_result_ration.clear()
             self.weight_result -= self.weight_product
             self.proteins_result -= product.proteins * (self.weight_product / 100)
             self.fats_result -= product.fats * (self.weight_product / 100)
             self.carbs_result -= product.carbs * (self.weight_product / 100)
             self.calories_result -= product.calories * (self.weight_product / 100)
-            self.listWidget_result_ration.clear()
+            print(self.weight_result, self.proteins_result)
+
+            print(*self.list)
             if len(str(int(self.weight_product))) <= 4:
                 self.listWidget_result_ration.addItem(
                     str(round(self.weight_result, 1)) + ' ' * 17 + str(round(self.proteins_result, 1)) + ' ' * 22 + str(
@@ -377,35 +360,11 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             else:
                 self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
                                                                "Похоже, вы умерли от переедания")
-    def show_list(self):
-        if self.pushButton_table2_show.clicked:
+            if self.weight_result == 0:
+                self.listWidget_result_ration.clear()
+        else:
+            self.listWidget_result_ration.clear()
 
-            if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
-                    self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
-                self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
-
-            else:
-                self.listWidget_table2_dailynorm.clear()
-                self.listWidget_table2_dailynorm.addItem("Рассчет суточной нормы калорий : \n")
-                self.listWidget_table2_dailynorm.addItem(
-                    f"По формуле Харриса-Бенедикта : \n {self.bmr_cal_harris} ккал")
-                self.listWidget_table2_dailynorm.addItem(
-                    f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
-                self.listWidget_table2_dailynorm.addItem(self.recomend_text + "\n")
-                self.listWidget_table2_dailynorm.addItem("Суточная норма калорий" +
-                                                         str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
-                self.listWidget_table2_dailynorm.addItem(f"белков {self.protein}")
-                self.listWidget_table2_dailynorm.addItem(f"жиров {self.fats}")
-                self.listWidget_table2_dailynorm.addItem(f"углеводов {self.carbs}")
-
-    def hide_list(self):
-        if self.pushButton_table2_hide.clicked:
-            if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
-                    self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
-                self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
-
-            else:
-                self.listWidget_table2_dailynorm.clear()
 
 # TODO добавить обновление итогового списка изза удаления продуктов
 # TODO привязать кнопки спрятать показать для листа с суточной нормой
