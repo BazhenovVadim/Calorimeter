@@ -371,8 +371,28 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
                     self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
                 self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
+        else:
+            self.listWidget_table2_dailynorm.clear()
+            self.listWidget_table2_dailynorm.addItem("Рассчет суточной нормы калорий : \n")
+            self.listWidget_table2_dailynorm.addItem(
+                f"По формуле Харриса-Бенедикта : \n {self.bmr_cal_harris} ккал")
+            self.listWidget_table2_dailynorm.addItem(
+                f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
+            self.listWidget_table2_dailynorm.addItem(self.recomend_text + "\n")
+            self.listWidget_table2_dailynorm.addItem("Суточная норма калорий" +
+                                                     str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
+            self.listWidget_table2_dailynorm.addItem(f"белков {self.protein}")
+            self.listWidget_table2_dailynorm.addItem(f"жиров {self.fats}")
+            self.listWidget_table2_dailynorm.addItem(f"углеводов {self.carbs}")
 
+    def hide_list(self):
+        if self.pushButton_table2_hide.clicked:
+            if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
+                    self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
+                self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
 
+            else:
+                self.listWidget_table2_dailynorm.clear()
 
 
 # TODO добавить обновление итогового списка изза удаления продуктов
