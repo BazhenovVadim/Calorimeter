@@ -285,7 +285,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
     def clear_products_list(self):
         if self.pushButton_2.clicked:
             if not self.listWidget_spisok_products.selectedItems():
-                dialog_row = QMessageBox.critical(self, "Выберите строчку", "Нельзя удалить")
+                dialog_row = QMessageBox.critical(self, "Нельзя удалить",
+                                                  "Выберите хотя бы одну строку или добавьте продукт")
             current_row = self.listWidget_spisok_products.currentRow()
             if current_row >= 0:
                 current_item = self.listWidget_spisok_products.takeItem(current_row)
@@ -361,7 +362,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_result_ration.clear()
         else:
             self.listWidget_result_ration.clear()
-
 
 
 # TODO добавить обновление итогового списка изза удаления продуктов

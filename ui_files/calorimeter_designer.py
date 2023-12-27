@@ -354,14 +354,14 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        color = QColor(255, 165, 0)
+        color = QColor(246,190,0)
         shadow = color.darker(115).name()
         text = 'white'
         self.pushButton_calculate_daily_allowance.setStyleSheet(f'''
                 QPushButton {{
                     color: {text};
                     background-color: {color.name()};
-                    padding: 12px;
+                    padding: 10px;
                     border-radius: 4px;
                     border-bottom: 4px solid {shadow};
                 }}''')
@@ -369,7 +369,7 @@ class Ui_MainWindow(object):
                 QPushButton {{
                     color: {text};
                     background-color: {color.name()};
-                    padding: 12px;
+                    padding: 10px;
                     border-radius: 4px;
                     border-bottom: 4px solid {shadow};
                 }}''')
@@ -393,6 +393,44 @@ class Ui_MainWindow(object):
                     border-radius: 4px;
                     border-bottom: 4px solid {shadow};
                 }}''')
+        color3 = QColor(252,210,153)
+        shadow3 = color3.darker(115).name()
+        self.pushButton_2.setStyleSheet(f'''
+                        QPushButton {{
+                            color: {text};
+                            background-color: {color3.name()};
+                            padding: 8px;
+                            border-radius: 4px;
+                            border-bottom: 4px solid {shadow3};
+                        }}''')
+        self.pushButton_table2_clear_all.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color3.name()};
+                                    padding: 8px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow3};
+                                }}''')
+
+        color4 = QColor(200,70,30)
+        shadow4 = color4.darker(115).name()
+        self.pushButton_table2_show.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color4.name()};
+                                    padding: 6px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow4};
+                                }}''')
+        self.pushButton_table2_hide.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color4.name()};
+                                    padding: 6px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow4};
+                                }}''')
+
 
 
 
