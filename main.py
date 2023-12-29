@@ -29,6 +29,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.name_product = None
         self.weight_product = None
         self.calories = None
+        self.result_bmr =None
         self.recomend_text = None
         self.weight_result = 0
         self.proteins_result = 0
@@ -123,8 +124,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
 
         self.dict_purpose_cal = \
             {
-                "сбросить вес": -500,
-                "набрать вес": 300,
+                "сбросить вес": 500,
+                "набрать вес": -300,
                 "сохранить вес": 0,
             }
         self.dict_for_list = \
@@ -189,8 +190,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_daily_allowance.addItem(
                     f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
                 self.listWidget_daily_allowance.addItem(self.recomend_text + "\n")
-                self.listWidget_daily_allowance.addItem("Суточная норма калорий" +
-                                                        str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
+                self.result_bmr = str(int(self.bmr_cal_mifflin) - self.coof_by_purpose)
+                self.listWidget_daily_allowance.addItem("Суточная норма калорий " + self.result_bmr)
                 self.listWidget_daily_allowance.addItem(f"белков {self.protein}")
                 self.listWidget_daily_allowance.addItem(f"жиров {self.fats}")
                 self.listWidget_daily_allowance.addItem(f"углеводов {self.carbs}")

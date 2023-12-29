@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QColor
 
 
 class Ui_MainWindow(object):
@@ -16,6 +17,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(511, 468)
         MainWindow.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        MainWindow.setStyleSheet("#MainWindow{border-image:url(back.jpg)}")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_21 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -419,3 +421,109 @@ class Ui_MainWindow(object):
         self.pushButton_table3_clear_one.setText(_translate("MainWindow", "Удалить выбранную запись"))
         self.pushButton_table3_clear_all.setText(_translate("MainWindow", "Очистить всё"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_history_consumption), _translate("MainWindow", "История потребеления калорий"))
+
+        color = QColor(246,190,0)
+        shadow = color.darker(115).name()
+        text = 'white'
+        self.pushButton_calculate_daily_allowance.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color.name()};
+                    padding: 10px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        self.pushButton_clear_daily_allowance.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color.name()};
+                    padding: 10px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        color2 = QColor(255, 180, 200)
+        shadow = color2.darker(115).name()
+        text = "white"
+        self.pushButton_add_product.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color2.name()};
+                    padding: 8px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        self.pushButton_clear_product.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color2.name()};
+                    padding: 8px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        color3 = QColor(252,210,153)
+        shadow3 = color3.darker(115).name()
+        self.pushButton_2.setStyleSheet(f'''
+                        QPushButton {{
+                            color: {text};
+                            background-color: {color3.name()};
+                            padding: 8px;
+                            border-radius: 4px;
+                            border-bottom: 4px solid {shadow3};
+                        }}''')
+        self.pushButton_table2_clear_all.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color3.name()};
+                                    padding: 8px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow3};
+                                }}''')
+        self.pushButton_table2_add_to_table3.setStyleSheet(f'''
+                                        QPushButton {{
+                                            color: {text};
+                                            background-color: {color3.name()};
+                                            padding: 8px;
+                                            border-radius: 4px;
+                                            border-bottom: 4px solid {shadow3};
+                                        }}''')
+
+        color4 = QColor(200,70,30)
+        shadow4 = color4.darker(115).name()
+        self.pushButton_table2_show.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color4.name()};
+                                    padding: 6px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow4};
+                                }}''')
+        self.pushButton_table2_hide.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color4.name()};
+                                    padding: 6px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow4};
+                                }}''')
+        color5 = QColor(249, 166, 2)
+        shadow5 = color.darker(115).name()
+        text = 'white'
+        self.pushButton_table3_clear_one.setStyleSheet(f'''
+                                        QPushButton {{
+                                            color: {text};
+                                            background-color: {color5.name()};
+                                            padding: 6px;
+                                            border-radius: 4px;
+                                            border-bottom: 4px solid {shadow5};
+                                        }}''')
+        self.pushButton_table3_clear_all.setStyleSheet(f'''
+                                        QPushButton {{
+                                            color: {text};
+                                            background-color: {color5.name()};
+                                            padding: 6px;
+                                            border-radius: 4px;
+                                            border-bottom: 4px solid {shadow5};
+                                        }}''')
+
+
+
