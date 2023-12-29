@@ -182,6 +182,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                     self.bmr_cal_harris = \
                         str(int(((9.5634 * self.weight) + (1.8496 * self.height) -
                                  (4.6756 * self.age) + 655.0955) * self.coof_activity))
+                self.listWidget_table2_dailynorm.clear()
                 self.listWidget_daily_allowance.clear()
                 self.listWidget_daily_allowance.addItem("Рассчет суточной нормы калорий : \n")
                 self.listWidget_daily_allowance.addItem(f"По формуле Харриса-Бенедикта : \n {self.bmr_cal_harris} ккал")
@@ -395,7 +396,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_table2_dailynorm.clear()
 
 
-# TODO добавить обновление итогового списка изза удаления продуктов
+
 # TODO привязать кнопки спрятать показать для листа с суточной нормой
 # TODO добавить диалоговое окно с предложение заменить если его нет но название похоже. Диалог окно что все поля должны быть заполнены
 #
