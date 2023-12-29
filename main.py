@@ -35,6 +35,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.fats_result = 0
         self.carbs_result = 0
         self.calories_result = 0
+        self.date = None
+
         self.tabWidget.setCurrentWidget(self.tab_daily_allowance)
         self.groop_radiobutton_gender = QButtonGroup()
         self.groop_radiobutton_gender.addButton(self.radioButton_man)
@@ -67,6 +69,10 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.clear_result_list_after_one_clear)
         self.pushButton_table2_hide.clicked.connect(self.hide_list)
         self.pushButton_table2_show.clicked.connect(self.show_list)
+        self.pushButton_table3_clear_all.clicked.connect(self.clear_all_table3)
+        self.pushButton_table3_clear_one.clicked.connect(self.clear_one_table3)
+        self.pushButton_table2_add_to_table3.clicked.connect(self.add_result_ration_to_table3)
+
 
     def check_gender(self):
         if self.radioButton_man.isChecked():
@@ -220,6 +226,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.coof_by_purpose = None
             self.bmr_cal_mifflin = None
             self.bmr_cal_harris = None
+
 
     def get_name_product(self):
         if self.lineEdit_write_product.text() != "":
@@ -396,9 +403,25 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             else:
                 self.listWidget_table2_dailynorm.clear()
 
+    def clear_one_table3(self):
+        if self.pushButton_table3_clear_one.clicked:
+            if not self.listWidget_5.selectedItems():
+                dialog_row = QMessageBox.critical(self, "Нельзя удалить",
+                                                  "Выберите хотя бы одну строку")
+            current_row = self.listWidget_5.currentRow()
+            if current_row >= 0:
+                current_item = self.listWidget_5.takeItem(current_row)
+                del current_item
+
+    def clear_all_table3(self):
+        if self.pushButton_table3_clear_all.clicked:
+            self.listWidget_5.clear()
+
+    def add_result_ration_to_table3(self):
+        if self.pushButton_table2_add_to_table3.clicked:
+            self.listWidget_5.addItem()
 
 
-# TODO привязать кнопки спрятать показать для листа с суточной нормой
 # TODO добавить диалоговое окно с предложение заменить если его нет но название похоже. Диалог окно что все поля должны быть заполнены
 #
 sys._excepthook = sys.excepthook
