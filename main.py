@@ -29,6 +29,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.name_product = None
         self.weight_product = None
         self.calories = None
+        self.result_bmr =None
         self.recomend_text = None
         self.weight_result = 0
         self.proteins_result = 0
@@ -129,8 +130,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
 
         self.dict_purpose_cal = \
             {
-                "сбросить вес": -500,
-                "набрать вес": 300,
+                "сбросить вес": 500,
+                "набрать вес": -300,
                 "сохранить вес": 0,
             }
         self.dict_for_list = \
@@ -195,8 +196,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_daily_allowance.addItem(
                     f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
                 self.listWidget_daily_allowance.addItem(self.recomend_text + "\n")
-                self.listWidget_daily_allowance.addItem("Суточная норма калорий" +
-                                                        str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
+                self.result_bmr = str(int(self.bmr_cal_mifflin) - self.coof_by_purpose)
+                self.listWidget_daily_allowance.addItem("Суточная норма калорий " + self.result_bmr)
                 self.listWidget_daily_allowance.addItem(f"белков {self.protein}")
                 self.listWidget_daily_allowance.addItem(f"жиров {self.fats}")
                 self.listWidget_daily_allowance.addItem(f"углеводов {self.carbs}")
@@ -379,20 +380,19 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
                     self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
                 self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
-
-            else:
-                self.listWidget_table2_dailynorm.clear()
-                self.listWidget_table2_dailynorm.addItem("Рассчет суточной нормы калорий : \n")
-                self.listWidget_table2_dailynorm.addItem(
-                    f"По формуле Харриса-Бенедикта : \n {self.bmr_cal_harris} ккал")
-                self.listWidget_table2_dailynorm.addItem(
-                    f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
-                self.listWidget_table2_dailynorm.addItem(self.recomend_text + "\n")
-                self.listWidget_table2_dailynorm.addItem("Суточная норма калорий" +
-                                                         str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
-                self.listWidget_table2_dailynorm.addItem(f"белков {self.protein}")
-                self.listWidget_table2_dailynorm.addItem(f"жиров {self.fats}")
-                self.listWidget_table2_dailynorm.addItem(f"углеводов {self.carbs}")
+        else:
+            self.listWidget_table2_dailynorm.clear()
+            self.listWidget_table2_dailynorm.addItem("Рассчет суточной нормы калорий : \n")
+            self.listWidget_table2_dailynorm.addItem(
+                f"По формуле Харриса-Бенедикта : \n {self.bmr_cal_harris} ккал")
+            self.listWidget_table2_dailynorm.addItem(
+                f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
+            self.listWidget_table2_dailynorm.addItem(self.recomend_text + "\n")
+            self.listWidget_table2_dailynorm.addItem("Суточная норма калорий" +
+                                                     str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
+            self.listWidget_table2_dailynorm.addItem(f"белков {self.protein}")
+            self.listWidget_table2_dailynorm.addItem(f"жиров {self.fats}")
+            self.listWidget_table2_dailynorm.addItem(f"углеводов {self.carbs}")
 
     def hide_list(self):
         if self.pushButton_table2_hide.clicked:
