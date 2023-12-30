@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pyuic5 calorimeter.ui -o calorimeter_designer.py
+
 # Form implementation generated from reading ui file 'calorimeter.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QHeaderView
 
 
 class Ui_MainWindow(object):
@@ -214,34 +214,24 @@ class Ui_MainWindow(object):
         self.verticalLayout_15.addLayout(self.horizontalLayout_9)
         self.horizontalLayout_11.addLayout(self.verticalLayout_15)
         self.verticalLayout_19.addLayout(self.horizontalLayout_11)
-        self.verticalLayout_13 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_13.setObjectName("verticalLayout_13")
-        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.label_products = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_products.setObjectName("label_products")
-        self.horizontalLayout_10.addWidget(self.label_products)
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_10.addItem(spacerItem4)
-        self.label_weight_products = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_weight_products.setObjectName("label_weight_products")
-        self.horizontalLayout_10.addWidget(self.label_weight_products)
-        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_10.addItem(spacerItem5)
-        self.label_calories_products = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_calories_products.setObjectName("label_calories_products")
-        self.horizontalLayout_10.addWidget(self.label_calories_products)
-        self.verticalLayout_13.addLayout(self.horizontalLayout_10)
-        self.listWidget_spisok_products = QtWidgets.QListWidget(self.groupBox_choose_ration)
-        self.listWidget_spisok_products.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.listWidget_spisok_products.setLayoutMode(QtWidgets.QListView.SinglePass)
-        self.listWidget_spisok_products.setObjectName("listWidget_spisok_products")
-        self.verticalLayout_13.addWidget(self.listWidget_spisok_products)
-        self.verticalLayout_19.addLayout(self.verticalLayout_13)
+        self.tableWidget_spisok_products = QtWidgets.QTableWidget(self.groupBox_choose_ration)
+        self.tableWidget_spisok_products.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget_spisok_products.setDragEnabled(False)
+        self.tableWidget_spisok_products.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidget_spisok_products.setObjectName("tableWidget_spisok_products")
+        self.tableWidget_spisok_products.setColumnCount(3)
+        self.tableWidget_spisok_products.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_spisok_products.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_spisok_products.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_spisok_products.setHorizontalHeaderItem(2, item)
+        self.verticalLayout_19.addWidget(self.tableWidget_spisok_products)
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
-        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_15.addItem(spacerItem6)
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_15.addItem(spacerItem4)
         self.pushButton_2 = QtWidgets.QPushButton(self.groupBox_choose_ration)
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout_15.addWidget(self.pushButton_2)
@@ -256,41 +246,29 @@ class Ui_MainWindow(object):
         self.verticalLayout_14.addWidget(self.label_result)
         self.verticalLayout_12 = QtWidgets.QVBoxLayout()
         self.verticalLayout_12.setObjectName("verticalLayout_12")
-        self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
-        self.label_weight_ration_result = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_weight_ration_result.setObjectName("label_weight_ration_result")
-        self.horizontalLayout_12.addWidget(self.label_weight_ration_result)
-        spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_12.addItem(spacerItem7)
-        self.label_protein_result = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_protein_result.setObjectName("label_protein_result")
-        self.horizontalLayout_12.addWidget(self.label_protein_result)
-        spacerItem8 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_12.addItem(spacerItem8)
-        self.label_fats_result = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_fats_result.setObjectName("label_fats_result")
-        self.horizontalLayout_12.addWidget(self.label_fats_result)
-        spacerItem9 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_12.addItem(spacerItem9)
-        self.label_carb_result = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_carb_result.setObjectName("label_carb_result")
-        self.horizontalLayout_12.addWidget(self.label_carb_result)
-        spacerItem10 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_12.addItem(spacerItem10)
-        self.label_calories_result = QtWidgets.QLabel(self.groupBox_choose_ration)
-        self.label_calories_result.setObjectName("label_calories_result")
-        self.horizontalLayout_12.addWidget(self.label_calories_result)
-        self.verticalLayout_12.addLayout(self.horizontalLayout_12)
-        self.listWidget_result_ration = QtWidgets.QListWidget(self.groupBox_choose_ration)
-        self.listWidget_result_ration.setMaximumSize(QtCore.QSize(16777215, 60))
-        self.listWidget_result_ration.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
-        self.listWidget_result_ration.setObjectName("listWidget_result_ration")
-        self.verticalLayout_12.addWidget(self.listWidget_result_ration)
+        self.tableWidget_result_ration = QtWidgets.QTableWidget(self.groupBox_choose_ration)
+        self.tableWidget_result_ration.setMaximumSize(QtCore.QSize(16777215, 120))
+        self.tableWidget_result_ration.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
+        self.tableWidget_result_ration.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget_result_ration.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidget_result_ration.setObjectName("tableWidget_result_ration")
+        self.tableWidget_result_ration.setColumnCount(5)
+        self.tableWidget_result_ration.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_result_ration.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_result_ration.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_result_ration.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_result_ration.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_result_ration.setHorizontalHeaderItem(4, item)
+        self.verticalLayout_12.addWidget(self.tableWidget_result_ration)
         self.horizontalLayout_17 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_17.setObjectName("horizontalLayout_17")
-        spacerItem11 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_17.addItem(spacerItem11)
+        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_17.addItem(spacerItem5)
         self.pushButton_table2_add_to_table3 = QtWidgets.QPushButton(self.groupBox_choose_ration)
         self.pushButton_table2_add_to_table3.setObjectName("pushButton_table2_add_to_table3")
         self.horizontalLayout_17.addWidget(self.pushButton_table2_add_to_table3)
@@ -322,34 +300,25 @@ class Ui_MainWindow(object):
         self.verticalLayout_17.setObjectName("verticalLayout_17")
         self.verticalLayout_16 = QtWidgets.QVBoxLayout()
         self.verticalLayout_16.setObjectName("verticalLayout_16")
-        self.horizontalLayout_14 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_14.setObjectName("horizontalLayout_14")
-        self.label_date = QtWidgets.QLabel(self.tab_history_consumption)
-        self.label_date.setObjectName("label_date")
-        self.horizontalLayout_14.addWidget(self.label_date)
-        spacerItem12 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_14.addItem(spacerItem12)
-        self.label_consumed = QtWidgets.QLabel(self.tab_history_consumption)
-        self.label_consumed.setObjectName("label_consumed")
-        self.horizontalLayout_14.addWidget(self.label_consumed)
-        spacerItem13 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_14.addItem(spacerItem13)
-        self.label_daily_norm = QtWidgets.QLabel(self.tab_history_consumption)
-        self.label_daily_norm.setObjectName("label_daily_norm")
-        self.horizontalLayout_14.addWidget(self.label_daily_norm)
-        spacerItem14 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_14.addItem(spacerItem14)
-        self.label_marks = QtWidgets.QLabel(self.tab_history_consumption)
-        self.label_marks.setObjectName("label_marks")
-        self.horizontalLayout_14.addWidget(self.label_marks)
-        self.verticalLayout_16.addLayout(self.horizontalLayout_14)
-        self.listWidget_5 = QtWidgets.QListWidget(self.tab_history_consumption)
-        self.listWidget_5.setObjectName("listWidget_5")
-        self.verticalLayout_16.addWidget(self.listWidget_5)
+        self.tableWidget_5 = QtWidgets.QTableWidget(self.tab_history_consumption)
+        self.tableWidget_5.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget_5.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidget_5.setObjectName("tableWidget_5")
+        self.tableWidget_5.setColumnCount(4)
+        self.tableWidget_5.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_5.setHorizontalHeaderItem(3, item)
+        self.verticalLayout_16.addWidget(self.tableWidget_5)
         self.horizontalLayout_18 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_18.setObjectName("horizontalLayout_18")
-        spacerItem15 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_18.addItem(spacerItem15)
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_18.addItem(spacerItem6)
         self.pushButton_table3_clear_one = QtWidgets.QPushButton(self.tab_history_consumption)
         self.pushButton_table3_clear_one.setObjectName("pushButton_table3_clear_one")
         self.horizontalLayout_18.addWidget(self.pushButton_table3_clear_one)
@@ -368,14 +337,16 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
+        self.tableWidget_5.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget_result_ration.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.tableWidget_spisok_products.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Калориметр"))
         self.label_female.setText(_translate("MainWindow", "Укажите пол:"))
         self.radioButton_man.setText(_translate("MainWindow", "Мужской"))
         self.radioButton_woman.setText(_translate("MainWindow", "Женский"))
@@ -399,131 +370,37 @@ class Ui_MainWindow(object):
         self.label_write_weight.setText(_translate("MainWindow", "Вес, гр"))
         self.pushButton_clear_product.setText(_translate("MainWindow", "Очистить"))
         self.pushButton_add_product.setText(_translate("MainWindow", "Добавить"))
-        self.label_products.setText(_translate("MainWindow", "Продукты"))
-        self.label_weight_products.setText(_translate("MainWindow", "Вес, гр"))
-        self.label_calories_products.setText(_translate("MainWindow", "Калории"))
+        item = self.tableWidget_spisok_products.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Продукты"))
+        item = self.tableWidget_spisok_products.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Вес, гр"))
+        item = self.tableWidget_spisok_products.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Калории"))
         self.pushButton_2.setText(_translate("MainWindow", "Очистить выбранную запись"))
         self.pushButton_table2_clear_all.setText(_translate("MainWindow", "Очистить всё"))
         self.label_result.setText(_translate("MainWindow", "ИТОГО"))
-        self.label_weight_ration_result.setText(_translate("MainWindow", "Вес, гр"))
-        self.label_protein_result.setText(_translate("MainWindow", "Белки, гр"))
-        self.label_fats_result.setText(_translate("MainWindow", "Жиры, гр"))
-        self.label_carb_result.setText(_translate("MainWindow", "Углеводы, гр"))
-        self.label_calories_result.setText(_translate("MainWindow", "кКал"))
+        item = self.tableWidget_result_ration.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Вес, гр"))
+        item = self.tableWidget_result_ration.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Белки"))
+        item = self.tableWidget_result_ration.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Жиры"))
+        item = self.tableWidget_result_ration.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Углеводы"))
+        item = self.tableWidget_result_ration.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Калории"))
         self.pushButton_table2_add_to_table3.setText(_translate("MainWindow", "Добавить запись в журнал"))
         self.pushButton_table2_hide.setText(_translate("MainWindow", "Скрыть"))
         self.pushButton_table2_show.setText(_translate("MainWindow", "Показать"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_choose_ration), _translate("MainWindow", "Выбор рациона на день"))
-        self.label_date.setText(_translate("MainWindow", "Дата"))
-        self.label_consumed.setText(_translate("MainWindow", "Потреблено"))
-        self.label_daily_norm.setText(_translate("MainWindow", "Суточная норма"))
-        self.label_marks.setText(_translate("MainWindow", "Результат"))
+        item = self.tableWidget_5.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Дата"))
+        item = self.tableWidget_5.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Потреблено калорий"))
+        item = self.tableWidget_5.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Суточная норма"))
+        item = self.tableWidget_5.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Результат"))
         self.pushButton_table3_clear_one.setText(_translate("MainWindow", "Удалить выбранную запись"))
         self.pushButton_table3_clear_all.setText(_translate("MainWindow", "Очистить всё"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_history_consumption), _translate("MainWindow", "История потребеления калорий"))
-
-        color = QColor(246,190,0)
-        shadow = color.darker(115).name()
-        text = 'white'
-        self.pushButton_calculate_daily_allowance.setStyleSheet(f'''
-                QPushButton {{
-                    color: {text};
-                    background-color: {color.name()};
-                    padding: 10px;
-                    border-radius: 4px;
-                    border-bottom: 4px solid {shadow};
-                }}''')
-        self.pushButton_clear_daily_allowance.setStyleSheet(f'''
-                QPushButton {{
-                    color: {text};
-                    background-color: {color.name()};
-                    padding: 10px;
-                    border-radius: 4px;
-                    border-bottom: 4px solid {shadow};
-                }}''')
-        color2 = QColor(255, 180, 200)
-        shadow = color2.darker(115).name()
-        text = "white"
-        self.pushButton_add_product.setStyleSheet(f'''
-                QPushButton {{
-                    color: {text};
-                    background-color: {color2.name()};
-                    padding: 8px;
-                    border-radius: 4px;
-                    border-bottom: 4px solid {shadow};
-                }}''')
-        self.pushButton_clear_product.setStyleSheet(f'''
-                QPushButton {{
-                    color: {text};
-                    background-color: {color2.name()};
-                    padding: 8px;
-                    border-radius: 4px;
-                    border-bottom: 4px solid {shadow};
-                }}''')
-        color3 = QColor(252,210,153)
-        shadow3 = color3.darker(115).name()
-        self.pushButton_2.setStyleSheet(f'''
-                        QPushButton {{
-                            color: {text};
-                            background-color: {color3.name()};
-                            padding: 8px;
-                            border-radius: 4px;
-                            border-bottom: 4px solid {shadow3};
-                        }}''')
-        self.pushButton_table2_clear_all.setStyleSheet(f'''
-                                QPushButton {{
-                                    color: {text};
-                                    background-color: {color3.name()};
-                                    padding: 8px;
-                                    border-radius: 4px;
-                                    border-bottom: 4px solid {shadow3};
-                                }}''')
-        self.pushButton_table2_add_to_table3.setStyleSheet(f'''
-                                        QPushButton {{
-                                            color: {text};
-                                            background-color: {color3.name()};
-                                            padding: 8px;
-                                            border-radius: 4px;
-                                            border-bottom: 4px solid {shadow3};
-                                        }}''')
-
-        color4 = QColor(200,70,30)
-        shadow4 = color4.darker(115).name()
-        self.pushButton_table2_show.setStyleSheet(f'''
-                                QPushButton {{
-                                    color: {text};
-                                    background-color: {color4.name()};
-                                    padding: 6px;
-                                    border-radius: 4px;
-                                    border-bottom: 4px solid {shadow4};
-                                }}''')
-        self.pushButton_table2_hide.setStyleSheet(f'''
-                                QPushButton {{
-                                    color: {text};
-                                    background-color: {color4.name()};
-                                    padding: 6px;
-                                    border-radius: 4px;
-                                    border-bottom: 4px solid {shadow4};
-                                }}''')
-        color5 = QColor(249, 166, 2)
-        shadow5 = color.darker(115).name()
-        text = 'white'
-        self.pushButton_table3_clear_one.setStyleSheet(f'''
-                                        QPushButton {{
-                                            color: {text};
-                                            background-color: {color5.name()};
-                                            padding: 6px;
-                                            border-radius: 4px;
-                                            border-bottom: 4px solid {shadow5};
-                                        }}''')
-        self.pushButton_table3_clear_all.setStyleSheet(f'''
-                                        QPushButton {{
-                                            color: {text};
-                                            background-color: {color5.name()};
-                                            padding: 6px;
-                                            border-radius: 4px;
-                                            border-bottom: 4px solid {shadow5};
-                                        }}''')
-
-
-
