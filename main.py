@@ -1,6 +1,7 @@
 import sys
 
 # Импортируем из PyQt5.QtWidgets классы для создания приложения и виджета
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
     QMessageBox
 
@@ -292,10 +293,11 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             if not self.listWidget_spisok_products.selectedItems():
                 dialog_row = QMessageBox.critical(self, "Нельзя удалить",
                                                   "Выберите хотя бы одну строку или добавьте продукт")
-            current_row = self.listWidget_spisok_products.currentRow()
-            if current_row >= 0:
-                current_item = self.listWidget_spisok_products.takeItem(current_row)
-                del current_item
+            else:
+                self.current_row = self.listWidget_spisok_products.currentRow()
+                if self.current_row >= 0:
+                    current_item = self.listWidget_spisok_products.takeItem(self.current_row)
+                    del current_item
 
     def clear_all_products(self):
         if self.pushButton_table2_clear_all.clicked:
@@ -317,11 +319,15 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.carbs_result += product.carbs * (self.weight_product / 100)
             self.calories_result += product.calories * (self.weight_product / 100)
             self.listWidget_result_ration.clear()
+
             if len(str(int(self.weight_product))) <= 3:
                 self.listWidget_result_ration.addItem(
                     str(round(self.weight_result, 1)) + ' ' * 17 + str(round(self.proteins_result, 1)) + ' ' * 22 + str(
                         round(self.fats_result, 1)) + ' ' * 22 + str(round(self.carbs_result, 1)) + ' ' * 23 + str(
                         round(self.calories_result, 1)))
+
+
+
             if len(str(int(self.weight_product))) >= 5:
                 self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
                                                                "Похоже, вы умерли от переедания")
@@ -333,6 +339,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.calories_result = 0
                 self.lineEdit_write_weight.clear()
                 self.weight_product = None
+
         session.close()
 
     def clear_result_list_after_clear_all(self):
@@ -344,7 +351,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         product = session.query(Products).where(Products.product_name == self.name_product).first()
         self.list = [self.listWidget_spisok_products.item for x in range(self.listWidget_spisok_products.count())]
 
-        if self.pushButton_2.clicked and len(self.list) > 0:
+        if self.pushButton_2.clicked and len(self.list) > 0 and self.listWidget_spisok_products.selectedItems():
             self.listWidget_result_ration.clear()
             self.weight_result -= self.weight_product
             self.proteins_result -= product.proteins * (self.weight_product / 100)
@@ -364,8 +371,9 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                                                                "Похоже, вы умерли от переедания")
             if self.weight_result == 0:
                 self.listWidget_result_ration.clear()
-        else:
+        if len(self.list) == 0:
             self.listWidget_result_ration.clear()
+
 
     def show_list(self):
         if self.pushButton_table2_show.clicked:
@@ -373,19 +381,19 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
                     self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
                 self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
-        else:
-            self.listWidget_table2_dailynorm.clear()
-            self.listWidget_table2_dailynorm.addItem("Рассчет суточной нормы калорий : \n")
-            self.listWidget_table2_dailynorm.addItem(
-                f"По формуле Харриса-Бенедикта : \n {self.bmr_cal_harris} ккал")
-            self.listWidget_table2_dailynorm.addItem(
-                f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
-            self.listWidget_table2_dailynorm.addItem(self.recomend_text + "\n")
-            self.listWidget_table2_dailynorm.addItem("Суточная норма калорий" +
-                                                     str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
-            self.listWidget_table2_dailynorm.addItem(f"белков {self.protein}")
-            self.listWidget_table2_dailynorm.addItem(f"жиров {self.fats}")
-            self.listWidget_table2_dailynorm.addItem(f"углеводов {self.carbs}")
+            else:
+                self.listWidget_table2_dailynorm.clear()
+                self.listWidget_table2_dailynorm.addItem("Рассчет суточной нормы калорий : \n")
+                self.listWidget_table2_dailynorm.addItem(
+                    f"По формуле Харриса-Бенедикта : \n {self.bmr_cal_harris} ккал")
+                self.listWidget_table2_dailynorm.addItem(
+                    f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
+                self.listWidget_table2_dailynorm.addItem(self.recomend_text + "\n")
+                self.listWidget_table2_dailynorm.addItem("Суточная норма калорий" +
+                                                         str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
+                self.listWidget_table2_dailynorm.addItem(f"белков {self.protein}")
+                self.listWidget_table2_dailynorm.addItem(f"жиров {self.fats}")
+                self.listWidget_table2_dailynorm.addItem(f"углеводов {self.carbs}")
 
     def hide_list(self):
         if self.pushButton_table2_hide.clicked:
