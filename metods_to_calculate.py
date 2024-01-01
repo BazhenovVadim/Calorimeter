@@ -1,3 +1,4 @@
+
 def mifflin_metod(weiht, height, age, activity, gender):
 
     if gender == "Мужчина":

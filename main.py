@@ -1,9 +1,13 @@
 import sys
+from datetime import datetime
+from string import ascii_letters
 
+from PyQt5 import Qt
+from PyQt5.QtGui import QColor
 # Импортируем из PyQt5.QtWidgets классы для создания приложения и виджета
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
-    QMessageBox
+    QMessageBox, QTableWidgetItem, QTableWidget, QHeaderView
 
 from data_base import *
 from ui_files.calorimeter_designer import Ui_MainWindow
@@ -30,13 +34,122 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.name_product = None
         self.weight_product = None
         self.calories = None
-        self.result_bmr =None
+        self.result_bmr = None
         self.recomend_text = None
         self.weight_result = 0
         self.proteins_result = 0
         self.fats_result = 0
         self.carbs_result = 0
         self.calories_result = 0
+        self.date = None
+        self.result = None
+        self.flag = False
+        self.some = None
+        self.current_row = None
+        color = QColor(246,190,0)
+        shadow = color.darker(115).name()
+        text = 'white'
+        self.pushButton_calculate_daily_allowance.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color.name()};
+                    padding: 10px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        self.pushButton_clear_daily_allowance.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color.name()};
+                    padding: 10px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        color2 = QColor(255, 180, 200)
+        shadow = color2.darker(115).name()
+        text = "white"
+        self.pushButton_add_product.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color2.name()};
+                    padding: 8px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        self.pushButton_clear_product.setStyleSheet(f'''
+                QPushButton {{
+                    color: {text};
+                    background-color: {color2.name()};
+                    padding: 8px;
+                    border-radius: 4px;
+                    border-bottom: 4px solid {shadow};
+                }}''')
+        color3 = QColor(252,210,153)
+        shadow3 = color3.darker(115).name()
+        self.pushButton_2.setStyleSheet(f'''
+                        QPushButton {{
+                            color: {text};
+                            background-color: {color3.name()};
+                            padding: 8px;
+                            border-radius: 4px;
+                            border-bottom: 4px solid {shadow3};
+                        }}''')
+        self.pushButton_table2_clear_all.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color3.name()};
+                                    padding: 8px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow3};
+                                }}''')
+        self.pushButton_table2_add_to_table3.setStyleSheet(f'''
+                                        QPushButton {{
+                                            color: {text};
+                                            background-color: {color3.name()};
+                                            padding: 8px;
+                                            border-radius: 4px;
+                                            border-bottom: 4px solid {shadow3};
+                                        }}''')
+
+        color4 = QColor(200,70,30)
+        shadow4 = color4.darker(115).name()
+        self.pushButton_table2_show.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color4.name()};
+                                    padding: 6px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow4};
+                                }}''')
+        self.pushButton_table2_hide.setStyleSheet(f'''
+                                QPushButton {{
+                                    color: {text};
+                                    background-color: {color4.name()};
+                                    padding: 6px;
+                                    border-radius: 4px;
+                                    border-bottom: 4px solid {shadow4};
+                                }}''')
+        color5 = QColor(249, 166, 2)
+        shadow5 = color.darker(115).name()
+        text = 'white'
+        self.pushButton_table3_clear_one.setStyleSheet(f'''
+                                        QPushButton {{
+                                            color: {text};
+                                            background-color: {color5.name()};
+                                            padding: 6px;
+                                            border-radius: 4px;
+                                            border-bottom: 4px solid {shadow5};
+                                        }}''')
+        self.pushButton_table3_clear_all.setStyleSheet(f'''
+                                        QPushButton {{
+                                            color: {text};
+                                            background-color: {color5.name()};
+                                            padding: 6px;
+                                            border-radius: 4px;
+                                            border-bottom: 4px solid {shadow5};
+                                        }}''')
+
+
         self.tabWidget.setCurrentWidget(self.tab_daily_allowance)
         self.groop_radiobutton_gender = QButtonGroup()
         self.groop_radiobutton_gender.addButton(self.radioButton_man)
@@ -69,6 +182,9 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.clear_result_list_after_one_clear)
         self.pushButton_table2_hide.clicked.connect(self.hide_list)
         self.pushButton_table2_show.clicked.connect(self.show_list)
+        self.pushButton_table3_clear_all.clicked.connect(self.clear_all_table3)
+        self.pushButton_table3_clear_one.clicked.connect(self.clear_one_table3)
+        self.pushButton_table2_add_to_table3.clicked.connect(self.add_result_ration_to_table3)
 
     def check_gender(self):
         if self.radioButton_man.isChecked():
@@ -193,9 +309,9 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_daily_allowance.addItem(self.recomend_text + "\n")
                 self.result_bmr = str(int(self.bmr_cal_mifflin) - self.coof_by_purpose)
                 self.listWidget_daily_allowance.addItem("Суточная норма калорий " + self.result_bmr)
-                self.listWidget_daily_allowance.addItem(f"белков {self.protein}")
-                self.listWidget_daily_allowance.addItem(f"жиров {self.fats}")
-                self.listWidget_daily_allowance.addItem(f"углеводов {self.carbs}")
+                self.listWidget_daily_allowance.addItem(f"белков {round(self.protein, 2)}")
+                self.listWidget_daily_allowance.addItem(f"жиров {round(self.fats, 2)}")
+                self.listWidget_daily_allowance.addItem(f"углеводов {round(self.carbs, 2)}")
 
     def clear_settings_day_normal(self):
         if self.pushButton_clear_daily_allowance.clicked:
@@ -224,11 +340,18 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.bmr_cal_harris = None
 
     def get_name_product(self):
-        if self.lineEdit_write_product.text() != "":
+
+        if self.lineEdit_write_product.text().isalpha():
             self.name_product = self.lineEdit_write_product.text().strip().capitalize()
-        if self.lineEdit_write_product.text() == "":
+        for elem in self.lineEdit_write_product.text():
+            if elem in ascii_letters or not elem.isalpha():
+                self.flag = False
+                break
+            else:
+                self.flag = True
+        if self.lineEdit_write_product.text() == "" or (self.flag == False):
             self.dialog_weight_product = QMessageBox.critical(self, "Продукты", "Введите корректное название")
-            self.lineEdit_write_weight.clear()
+            self.lineEdit_write_product.clear()
             self.name_product = None
 
     def get_weight_product(self):
@@ -250,34 +373,22 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
 
     def add_product_to_list(self):
         session = session_factory()
-
         self.products_in_database = session.query(Products).all()
         self.products = [str(x) for x in self.products_in_database]
-
         if self.pushButton_add_product.clicked and (self.name_product in self.products) and (
                 self.weight_product is not None) and (self.name_product is not None):
             if len(str(int(self.weight_product))) < 5:
                 product = session.query(Products).where(Products.product_name == self.name_product).first()
                 self.calories = product.calories * (self.weight_product / 100)
-                if len(self.name_product) > 3 and len(self.name_product) <= 10:
-                    self.listWidget_spisok_products.addItem(
-                        self.name_product + '-' * (35 - len(self.name_product)) + str(self.weight_product) + '-' * (
-                                37 - len(str(self.calories))) + str(self.calories))
-                if len(self.name_product) <= 3:
-                    self.listWidget_spisok_products.addItem(
-                        self.name_product + '-' * (37 - len(self.name_product)) + str(self.weight_product) + '-' * (
-                                37 - len(str(self.calories))) + str(self.calories))
-                if len(self.name_product) > 10 and len(self.name_product) <= 15:
-                    self.listWidget_spisok_products.addItem(
-                        self.name_product + '-' * (33 - len(self.name_product)) + str(self.weight_product) + '-' * (
-                                37 - len(str(self.calories))) + str(self.calories))
-                if len(self.name_product) > 15:
-                    self.listWidget_spisok_products.addItem(
-                        self.name_product + '-' * (29 - len(self.name_product)) + str(self.weight_product) + '-' * (
-                                37 - len(str(self.calories))) + str(self.calories))
+                row = self.tableWidget_spisok_products.rowCount()
+                self.tableWidget_spisok_products.insertRow(row)
+                self.tableWidget_spisok_products.setItem(row, 0, QTableWidgetItem(str(self.name_product)))
+                self.tableWidget_spisok_products.setItem(row, 1, QTableWidgetItem(str(self.weight_product)))
+                self.tableWidget_spisok_products.setItem(row, 2, QTableWidgetItem(str(self.calories)))
+
 
         else:
-            self.dialog_add_product = QMessageBox.critical(self, "Продукты", "Вы что-то не то ввели")
+            self.dialog_add_product = QMessageBox.critical(self, "Продукты", "Введите корректные данные")
             self.lineEdit_write_product.clear()
             self.name_product = None
 
@@ -288,29 +399,17 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.name_product = None
             self.weight_product = None
 
-    def clear_products_list(self):
-        if self.pushButton_2.clicked:
-            if not self.listWidget_spisok_products.selectedItems():
-                dialog_row = QMessageBox.critical(self, "Нельзя удалить",
-                                                  "Выберите хотя бы одну строку или добавьте продукт")
-            else:
-                self.current_row = self.listWidget_spisok_products.currentRow()
-                if self.current_row >= 0:
-                    current_item = self.listWidget_spisok_products.takeItem(self.current_row)
-                    del current_item
-
     def clear_all_products(self):
         if self.pushButton_table2_clear_all.clicked:
-            self.listWidget_spisok_products.clear()
             self.weight_result = 0
             self.proteins_result = 0
             self.fats_result = 0
             self.carbs_result = 0
             self.calories_result = 0
+            self.tableWidget_spisok_products.setRowCount(0)
 
     def add_result_list(self):
         session = session_factory()
-
         if self.pushButton_add_product.clicked and self.name_product is not None and self.name_product != '':
             product = session.query(Products).where(Products.product_name == self.name_product).first()
             self.weight_result += self.weight_product
@@ -318,20 +417,19 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.fats_result += product.fats * (self.weight_product / 100)
             self.carbs_result += product.carbs * (self.weight_product / 100)
             self.calories_result += product.calories * (self.weight_product / 100)
-            self.listWidget_result_ration.clear()
-
-            if len(str(int(self.weight_product))) <= 3:
-                self.listWidget_result_ration.addItem(
-                    str(round(self.weight_result, 1)) + ' ' * 17 + str(round(self.proteins_result, 1)) + ' ' * 22 + str(
-                        round(self.fats_result, 1)) + ' ' * 22 + str(round(self.carbs_result, 1)) + ' ' * 23 + str(
-                        round(self.calories_result, 1)))
-
-
+            self.tableWidget_result_ration.setRowCount(0)
+            roww = self.tableWidget_result_ration.rowCount()
+            self.tableWidget_result_ration.insertRow(roww)
+            self.tableWidget_result_ration.setItem(roww, 0, QTableWidgetItem(str(round(self.weight_result, 1))))
+            self.tableWidget_result_ration.setItem(roww, 1, QTableWidgetItem(str(round(self.proteins_result, 1))))
+            self.tableWidget_result_ration.setItem(roww, 2, QTableWidgetItem(str(round(self.fats_result, 1))))
+            self.tableWidget_result_ration.setItem(roww, 3, QTableWidgetItem(str(round(self.carbs_result, 1))))
+            self.tableWidget_result_ration.setItem(roww, 4, QTableWidgetItem(str(round(self.calories_result,1))))
 
             if len(str(int(self.weight_product))) >= 5:
                 self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
                                                                "Похоже, вы умерли от переедания")
-                self.listWidget_result_ration.clear()
+                self.tableWidget_result_ration.setRowCount(0)
                 self.weight_result = 0
                 self.proteins_result = 0
                 self.fats_result = 0
@@ -344,43 +442,54 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
 
     def clear_result_list_after_clear_all(self):
         if self.pushButton_table2_clear_all.clicked:
-            self.listWidget_result_ration.clear()
+            self.tableWidget_result_ration.setRowCount(0)
 
     def clear_result_list_after_one_clear(self):
         session = session_factory()
-        product = session.query(Products).where(Products.product_name == self.name_product).first()
-        self.list = [self.listWidget_spisok_products.item for x in range(self.listWidget_spisok_products.count())]
+        self.list = [x for x in range(self.tableWidget_spisok_products.rowCount())]
+        if self.pushButton_2.clicked:
+            if not self.tableWidget_spisok_products.selectedItems():
+                dialog_row = QMessageBox.critical(self, "Нельзя удалить",
+                                                  "Выберите хотя бы одну строку или добавьте продукт")
 
-        if self.pushButton_2.clicked and len(self.list) > 0 and self.listWidget_spisok_products.selectedItems():
-            self.listWidget_result_ration.clear()
-            self.weight_result -= self.weight_product
-            self.proteins_result -= product.proteins * (self.weight_product / 100)
-            self.fats_result -= product.fats * (self.weight_product / 100)
-            self.carbs_result -= product.carbs * (self.weight_product / 100)
-            self.calories_result -= product.calories * (self.weight_product / 100)
-            print(self.weight_result, self.proteins_result)
-
-            print(*self.list)
-            if len(str(int(self.weight_product))) <= 4:
-                self.listWidget_result_ration.addItem(
-                    str(round(self.weight_result, 1)) + ' ' * 17 + str(round(self.proteins_result, 1)) + ' ' * 22 + str(
-                        round(self.fats_result, 1)) + ' ' * 22 + str(round(self.carbs_result, 1)) + ' ' * 23 + str(
-                        round(self.calories_result, 1)))
             else:
-                self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
-                                                               "Похоже, вы умерли от переедания")
-            if self.weight_result == 0:
-                self.listWidget_result_ration.clear()
-        if len(self.list) == 0:
-            self.listWidget_result_ration.clear()
+                self.current_row = self.tableWidget_spisok_products.currentRow()
+                product = session.query(Products).where(Products.product_name == str(self.tableWidget_spisok_products.item(self.current_row, 0).text())).first()
+                self.some = int(str(self.tableWidget_spisok_products.item(self.current_row, 1).text()))
+                self.weight_result -= self.some
+                self.proteins_result -= product.proteins * (self.some / 100)
+                self.fats_result -= product.fats * (self.some / 100)
+                self.carbs_result -= product.carbs * (self.some / 100)
+                self.calories_result -= product.calories * (self.some / 100)
+                if self.current_row >= 0:
+                    self.tableWidget_spisok_products.removeRow(self.current_row)
+                    self.tableWidget_spisok_products.selectionModel().clearCurrentIndex()
+                if len(str(int(self.some))) <= 4:
+                    self.tableWidget_result_ration.setRowCount(0)
+                    roww = self.tableWidget_result_ration.rowCount()
+                    self.tableWidget_result_ration.insertRow(roww)
+                    self.tableWidget_result_ration.setItem(roww, 0, QTableWidgetItem(str(self.weight_result)))
+                    self.tableWidget_result_ration.setItem(roww, 1,
+                                                           QTableWidgetItem(str(self.proteins_result)))
+                    self.tableWidget_result_ration.setItem(roww, 2, QTableWidgetItem(str(self.fats_result)))
+                    self.tableWidget_result_ration.setItem(roww, 3, QTableWidgetItem(str(self.carbs_result)))
+                    self.tableWidget_result_ration.setItem(roww, 4,
+                                                           QTableWidgetItem(str(self.calories_result)))
+
+                    if self.weight_result <= 0:
+                        self.tableWidget_result_ration.setRowCount(0)
+                else:
+                    self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
+                                                                   "Похоже, вы умерли от переедания")
+            if len(self.list) == 0:
+                self.tableWidget_result_ration.setRowCount(0)
 
 
     def show_list(self):
         if self.pushButton_table2_show.clicked:
-
             if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
                     self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
-                self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
+                self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля на 1 странице")
             else:
                 self.listWidget_table2_dailynorm.clear()
                 self.listWidget_table2_dailynorm.addItem("Рассчет суточной нормы калорий : \n")
@@ -389,26 +498,56 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.listWidget_table2_dailynorm.addItem(
                     f"По формуле Миффлина-Сан Жеора : \n {self.bmr_cal_mifflin} ккал \n")
                 self.listWidget_table2_dailynorm.addItem(self.recomend_text + "\n")
-                self.listWidget_table2_dailynorm.addItem("Суточная норма калорий" +
-                                                         str(int(self.bmr_cal_mifflin) - self.coof_by_purpose))
-                self.listWidget_table2_dailynorm.addItem(f"белков {self.protein}")
-                self.listWidget_table2_dailynorm.addItem(f"жиров {self.fats}")
-                self.listWidget_table2_dailynorm.addItem(f"углеводов {self.carbs}")
+                self.listWidget_table2_dailynorm.addItem("Суточная норма калорий " + self.result_bmr)
+                self.listWidget_table2_dailynorm.addItem(f"белков {round(self.protein, 2)}")
+                self.listWidget_table2_dailynorm.addItem(f"жиров {round(self.fats, 2)}")
+                self.listWidget_table2_dailynorm.addItem(f"углеводов {round(self.carbs, 2)}")
 
     def hide_list(self):
         if self.pushButton_table2_hide.clicked:
             if (self.age is None or self.weight is None or self.height is None or self.lifestyle is None or
                     self.gender is None or self.purpose is None or self.coof_activity is None or self.coof_by_purpose is None):
-                self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля")
+                self.dialog = QMessageBox.critical(self, "Ошибка", "Заполните все поля на 1 странице")
 
             else:
                 self.listWidget_table2_dailynorm.clear()
 
+    def clear_one_table3(self):
+        if self.pushButton_table3_clear_one.clicked:
+            if not self.tableWidget_5.selectedItems():
+                dialog_row = QMessageBox.critical(self, "Нельзя удалить",
+                                                  "Выберите хотя бы одну строку")
+        current_row = self.tableWidget_5.currentRow()
+        if current_row >= 0:
+            self.tableWidget_5.removeRow(current_row)
+            self.tableWidget_5.selectionModel().clearCurrentIndex()
+    def clear_all_table3(self):
+        if self.pushButton_table3_clear_all.clicked:
+            self.tableWidget_5.setRowCount(0)
+            self.date = None
 
 
-# TODO привязать кнопки спрятать показать для листа с суточной нормой
-# TODO добавить диалоговое окно с предложение заменить если его нет но название похоже. Диалог окно что все поля должны быть заполнены
-#
+    def add_result_ration_to_table3(self):
+        if self.pushButton_table2_add_to_table3.clicked:
+            if self.result_bmr is None or self.calories_result == 0:
+                dialog_window = QMessageBox.critical(self, "Ошибка",
+                                                     "Заполните поля для расчета суточной нормы "
+                                                     "или добавьте еды в свой рацион")
+
+            else:
+                if int(self.calories_result) <= int(self.result_bmr):
+                    self.result = 'Well done!'
+                if int(self.calories_result) > int(self.result_bmr):
+                    self.result = 'So baad maan!'
+
+                row = self.tableWidget_5.rowCount()
+                self.tableWidget_5.insertRow(row)
+                self.tableWidget_5.setItem(row, 0, QTableWidgetItem(str(datetime.date(datetime.now()))))
+                self.tableWidget_5.setItem(row, 1, QTableWidgetItem(str(self.calories_result)))
+                self.tableWidget_5.setItem(row, 2, QTableWidgetItem(str(self.result_bmr)))
+                self.tableWidget_5.setItem(row, 3, QTableWidgetItem(str(self.result)))
+
+
 sys._excepthook = sys.excepthook
 
 
