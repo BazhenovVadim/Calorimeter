@@ -18,4 +18,6 @@ class User(Base):
         return f"{self.user_id} {self.user_name} {self.login}"
 
     def __repr__(self):
+
         return str(self)
+
