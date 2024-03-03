@@ -7,7 +7,7 @@ from data_base import Base
 class DayResults(Base):
     __tablename__ = "day_results"
 
-    id_result = Column(String, primary_key=True, autoincrement=True)
+    id_result = Column(Integer, autoincrement=True, primary_key=True )
     result = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
 

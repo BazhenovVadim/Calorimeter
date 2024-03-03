@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
-from .database_meta import Base
+from sqlalchemy import Column, Integer, String,Float
+from .database_meta import BaseSQLAlchemyModel
 
 
-class Products(Base):
+class Products(BaseSQLAlchemyModel):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -13,7 +13,7 @@ class Products(Base):
     calories = Column(Float, nullable=False)
 
     def __str__(self):
-        return f"{self.product_name}"
+        return f"{self.id},{self.product_name},{self.calories}"
 
     def __repr__(self):
         return str(self)
