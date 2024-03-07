@@ -18,13 +18,13 @@ class ProductsService:
     @staticmethod
     async def get_product_by_id(product_id: int,
                              session: AsyncSession) -> Optional[Products]:
-        query = await session.execute(select(Products).where(Products.id == product_id))
+        query = await session.execute(select(Products).where(Products.product_id == product_id))
         product = query.scalars().first()
         return product
 
     @staticmethod
     async def get_all_products(session: AsyncSession) -> List[Products]:
-        query = await session.execute(select(Products).order_by(Products.id))
+        query = await session.execute(select(Products).order_by(Products.product_id))
         products = query.scalars().all()
         return products
 
