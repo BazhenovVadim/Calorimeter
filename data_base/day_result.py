@@ -1,10 +1,10 @@
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
-from data_base import Base
+from data_base import BaseSQLAlchemyModel
 
 
-class DayResults(Base):
+class DayResults(BaseSQLAlchemyModel):
     __tablename__ = "day_results"
 
     id_result = Column(Integer, autoincrement=True, primary_key=True )

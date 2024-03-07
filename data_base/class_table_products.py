@@ -13,7 +13,7 @@ class Products(BaseSQLAlchemyModel):
     calories = Column(Float, nullable=False)
 
     def __str__(self):
-        return f"{self.id},{self.product_name},{self.calories}"
+        return f"{self.id}, {self.product_name}, {self.proteins}, {self.carbs}, {self.fats}, {self.calories}"
 
     def __repr__(self):
         return str(self)

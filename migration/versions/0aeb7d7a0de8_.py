@@ -30,7 +30,7 @@ def upgrade() -> None:
     sa.UniqueConstraint('login')
     )
     op.create_table('day_results',
-    sa.Column('id_result', sa.String(), autoincrement=True, nullable=False),
+    sa.Column('id_result', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('result', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),

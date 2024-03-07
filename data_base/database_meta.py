@@ -11,7 +11,7 @@ engine_async = create_async_engine(
     f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}",
     echo=SQL_ECHO,
     future=True)
-session_async_factory = sessionmaker(engine_async,class_=AsyncSession,
+session_async_factory = sessionmaker(engine_async, class_=AsyncSession,
                                      expire_on_commit=False,
                                      autoflush=False)
 

@@ -3,6 +3,7 @@ DATABASE_PASSWORD = "123"
 DATABASE_HOST = "localhost"
 DATABASE_PORT = 3010
 DATABASE_NAME = "database_calorimeter"
-
+SECRET_JWT_KEY = "q[xO}X&7V(XbRm_5/--\9[i@SsS26W"
+TOKEN_EXP_IN_MINUTES = 10
 
 SQL_ECHO = True
