@@ -28,7 +28,15 @@ async def get_all_products(session: AsyncSession = Depends(get_session)):
 
 
 @router.post("/", response_model=ProductOut)
-async def create_product(product_dto: ProductOut, session: AsyncSession = Depends(get_session)):
+async def create_product(product_dto: ProductIn, session: AsyncSession = Depends(get_session)):
+    # Проверяем существование продукта с таким id или именем
+
+    existing_product_by_name = await ProductsService.get_products_by_name(product_dto.product_name, session)
+
+    if existing_product_by_name:
+        raise HTTPException(status_code=400, detail="Product with the same name already exists")
+
+    # Создаем продукт
     product = await ProductsService.create_product(product_dto, session)
     return ProductOut(**product.to_dict())
 
