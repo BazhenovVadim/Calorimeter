@@ -1,7 +1,7 @@
 from typing import AsyncIterator
 
 from pydantic import BaseModel
-from sqlalchemy import inspect
+from sqlalchemy import inspect, create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import declarative_base, sessionmaker
 from config import DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME, DATABASE_PORT, SQL_ECHO
@@ -14,7 +14,8 @@ engine_async = create_async_engine(
 session_async_factory = sessionmaker(engine_async, class_=AsyncSession,
                                      expire_on_commit=False,
                                      autoflush=False)
-
+engine = create_engine(f"postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}", echo=False)
+session_factory = sessionmaker(engine, autocommit=False)
 metadata = Base.metadata
 
 

@@ -8,11 +8,13 @@ from starlette import status
 from data_base import get_session
 from model import Token
 from services import UserService, AuthService
-from .api_controllers import user_controller, product_controller
+from .api_controllers import user_controller, product_controller, day_result_controller
 
 app = FastAPI(docs_url="/")
 app.include_router(user_controller)
 app.include_router(product_controller)
+app.include_router(day_result_controller)
+
 
 @app.post("/token")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],

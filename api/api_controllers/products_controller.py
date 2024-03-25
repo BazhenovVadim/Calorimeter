@@ -13,7 +13,7 @@ router = APIRouter(prefix="/products", tags=["products"])
 
 @router.get("/{product_name}", response_model=Optional[ProductOut])
 async def get_product_by_name(product_name: str, session: AsyncSession = Depends(get_session)):
-    product = await ProductsService.get_products_by_name(product_name, session)
+    product = await ProductsService.get_product_by_name(product_name, session)
     if product:
         dto_product = ProductOut(**product.to_dict())
         print()

@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
     QMessageBox, QTableWidgetItem, QTableWidget, QHeaderView
 
 from data_base import *
+from data_base.database_meta import session_factory
 from ui_files.calorimeter_designer import Ui_MainWindow
 
 
@@ -347,7 +348,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 break
             else:
                 self.flag = True
-        if self.lineEdit_write_product.text() == "" or (self.flag == False):
+
+        if self.lineEdit_write_product.text() == "" or (self.flag is False):
             self.dialog_weight_product = QMessageBox.critical(self, "Продукты", "Введите корректное название")
             self.lineEdit_write_product.clear()
             self.name_product = None
@@ -373,6 +375,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         session = session_factory()
         self.products_in_database = session.query(Products).all()
         self.products = [str(x) for x in self.products_in_database]
+        print(self.name_product in self.products)
+        print(self.products, type(self.products), self.name_product, type(self.name_product))
         if self.pushButton_add_product.clicked and (self.name_product in self.products) and (
                 self.weight_product is not None) and (self.name_product is not None):
             if len(str(int(self.weight_product))) < 5:
@@ -383,12 +387,10 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.tableWidget_spisok_products.setItem(row, 0, QTableWidgetItem(str(self.name_product)))
                 self.tableWidget_spisok_products.setItem(row, 1, QTableWidgetItem(str(self.weight_product)))
                 self.tableWidget_spisok_products.setItem(row, 2, QTableWidgetItem(str(self.calories)))
-
-
-        else:
-            self.dialog_add_product = QMessageBox.critical(self, "Продукты", "Введите корректные данные")
-            self.lineEdit_write_product.clear()
-            self.name_product = None
+        # else:
+        #     self.dialog_add_product = QMessageBox.critical(self, "Продукты", "Введите корректные данные")
+        #     self.lineEdit_write_product.clear()
+        #     self.name_product = None
 
     def clear_data_in_lineEdit(self):
         if self.pushButton_clear_product.clicked:

@@ -8,6 +8,9 @@ class DayResults(BaseSQLAlchemyModel):
     __tablename__ = "day_results"
 
     id_result = Column(Integer, autoincrement=True, primary_key=True )
+    date = Column(String, nullable=False)
+    norma = Column(Integer, nullable=False)
+    get_in_day = Column(Integer, nullable=False)
     result = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
 
