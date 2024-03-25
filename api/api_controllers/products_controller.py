@@ -52,13 +52,17 @@ async def update_product(product_dto: ProductOut, session: AsyncSession = Depend
 
 
 @router.delete("/")
-async def delete_product(product_dto:ProductOut, session: AsyncSession = Depends(get_session)):
-    product = await ProductsService.get_product_by_id(product_dto.product_id, session)
+async def delete_product(product_name: str, session: AsyncSession = Depends(get_session)):
+    existing_product_by_name = await ProductsService.get_product_by_name(product_name, session)
+
+    if not existing_product_by_name:
+        raise HTTPException(status_code=400, detail=" Not Product with the same name")
+    product = await ProductsService.get_product_by_name(product_name, session)
     if product:
         await session.delete(product)
         await session.commit()
         return "status OK"
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Продукта с таким id не существует")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Продукта с таким названием не существует")
 
 #TODO: возможность изменять и создавать продукт только для админа(замочек сделать)
-#TODO: проверка на уже существующие данные в базе при попытке создать или удалить
+

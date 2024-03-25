@@ -9,7 +9,7 @@ from model.products import ProductIn, ProductOut
 
 class ProductsService:
     @staticmethod
-    async def get_products_by_name(product_name: str,
+    async def get_product_by_name(product_name: str,
                                    session: AsyncSession) -> Optional[Products]:
         query = await session.execute(select(Products).where(Products.product_name == product_name))
         product = query.scalars().first()
@@ -34,5 +34,7 @@ class ProductsService:
         session.add(product)
         await session.commit()
         return product
+
+
 
 
