@@ -53,7 +53,7 @@ class AuthService:
 
     @staticmethod
     def create_access_token_by_user(user: User) -> str:
-        payload = {"user_id": user.id, "login": user.login}
+        payload = {"user_id": user.user_id, "login": user.login}
         access_token = AuthService.create_jwt_token(payload)
         return access_token
 
@@ -72,7 +72,7 @@ class AuthService:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
-        query = await session.execute(select(User).where(User.id == user_id))
+        query = await session.execute(select(User).where(User.user_id == user_id))
         user: User = query.scalars().first()
         if user is None:
             raise credentials_exception

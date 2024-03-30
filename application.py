@@ -6,20 +6,68 @@ from PyQt5 import Qt
 from PyQt5.QtGui import QColor
 # Импортируем из PyQt5.QtWidgets классы для создания приложения и виджета
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, \
-    QMessageBox, QTableWidgetItem, QTableWidget, QHeaderView
+    QMessageBox, QTableWidgetItem, QTableWidget, QHeaderView, QWidget, QLineEdit, QPushButton, QVBoxLayout, QLabel
+import requests
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from data_base import *
 from data_base.database_meta import session_factory
+from services import AuthService
 from ui_files.calorimeter_designer import Ui_MainWindow
 
 
 # from metods_to_calculate import harris_benedict_metod, mifflin_metod
+
+class LoginApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.init_ui()
+
+    def init_ui(self):
+        self.setWindowTitle('Login')
+        layout = QVBoxLayout()
+        self.username_input = QLineEdit(self)
+        self.username_input.setPlaceholderText('Username')
+        layout.addWidget(self.username_input)
+        self.password_input = QLineEdit(self)
+        self.password_input.setPlaceholderText('Password')
+        layout.addWidget(self.password_input)
+        login_button = QPushButton('Login')
+        login_button.clicked.connect(self.login)
+        layout.addWidget(login_button)
+        self.result_label = QLabel(self)
+        layout.addWidget(self.result_label)
+        self.setLayout(layout)
+
+    def login(self):
+        username = self.username_input.text()
+        password = self.password_input.text()
+
+        response = requests.post("http://127.0.0.1:8000/token", data={"username": username, "password": password})
+
+        if response.status_code == 200:
+            token = response.json().get("access_token")
+            user_response = requests.get("http://127.0.0.1:8000/user/get_user_id",
+                                         headers={"Authorization": f"Bearer {token}"})
+            if user_response.status_code == 200:
+                current_user_id = int(user_response.content)
+                self.result_label.setText(f"Current User ID: {current_user_id}")
+                return current_user_id
+            else:
+                self.result_label.setText("Failed to get current user")
+        else:
+            self.result_label.setText("Login failed")
 
 
 class Calorimeter(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.login_app = LoginApp()
+        layout = QVBoxLayout()
+        layout.addWidget(self.login_app)
+        self.setLayout(layout)
         self.connection_signals()
         self.age = None
         self.weight = None
@@ -46,7 +94,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.flag = False
         self.some = None
         self.current_row = None
-        color = QColor(246,190,0)
+        color = QColor(246, 190, 0)
         shadow = color.darker(115).name()
         text = 'white'
         self.pushButton_calculate_daily_allowance.setStyleSheet(f'''
@@ -84,7 +132,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                     border-radius: 4px;
                     border-bottom: 4px solid {shadow};
                 }}''')
-        color3 = QColor(252,210,153)
+        color3 = QColor(252, 210, 153)
         shadow3 = color3.darker(115).name()
         self.pushButton_2.setStyleSheet(f'''
                         QPushButton {{
@@ -111,7 +159,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                                             border-bottom: 4px solid {shadow3};
                                         }}''')
 
-        color4 = QColor(200,70,30)
+        color4 = QColor(200, 70, 30)
         shadow4 = color4.darker(115).name()
         self.pushButton_table2_show.setStyleSheet(f'''
                                 QPushButton {{
@@ -148,7 +196,6 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                                             border-radius: 4px;
                                             border-bottom: 4px solid {shadow5};
                                         }}''')
-
 
         self.tabWidget.setCurrentWidget(self.tab_daily_allowance)
         self.groop_radiobutton_gender = QButtonGroup()
@@ -375,8 +422,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         session = session_factory()
         self.products_in_database = session.query(Products).all()
         self.products = [str(x) for x in self.products_in_database]
-        print(self.name_product in self.products)
-        print(self.products, type(self.products), self.name_product, type(self.name_product))
+
         if self.pushButton_add_product.clicked and (self.name_product in self.products) and (
                 self.weight_product is not None) and (self.name_product is not None):
             if len(str(int(self.weight_product))) < 5:
@@ -424,7 +470,7 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
             self.tableWidget_result_ration.setItem(roww, 1, QTableWidgetItem(str(round(self.proteins_result, 1))))
             self.tableWidget_result_ration.setItem(roww, 2, QTableWidgetItem(str(round(self.fats_result, 1))))
             self.tableWidget_result_ration.setItem(roww, 3, QTableWidgetItem(str(round(self.carbs_result, 1))))
-            self.tableWidget_result_ration.setItem(roww, 4, QTableWidgetItem(str(round(self.calories_result,1))))
+            self.tableWidget_result_ration.setItem(roww, 4, QTableWidgetItem(str(round(self.calories_result, 1))))
 
             if len(str(int(self.weight_product))) >= 5:
                 self.dialog_result_list = QMessageBox.critical(self, "Ваш рацион",
@@ -453,7 +499,8 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
 
             else:
                 self.current_row = self.tableWidget_spisok_products.currentRow()
-                product = session.query(Products).where(Products.product_name == str(self.tableWidget_spisok_products.item(self.current_row, 0).text())).first()
+                product = session.query(Products).where(Products.product_name == str(
+                    self.tableWidget_spisok_products.item(self.current_row, 0).text())).first()
                 self.some = int(str(self.tableWidget_spisok_products.item(self.current_row, 1).text()))
                 self.weight_result -= self.some
                 self.proteins_result -= product.proteins * (self.some / 100)
@@ -519,11 +566,11 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         if current_row >= 0:
             self.tableWidget_5.removeRow(current_row)
             self.tableWidget_5.selectionModel().clearCurrentIndex()
+
     def clear_all_table3(self):
         if self.pushButton_table3_clear_all.clicked:
             self.tableWidget_5.setRowCount(0)
             self.date = None
-
 
     def add_result_ration_to_table3(self):
         if self.pushButton_table2_add_to_table3.clicked:
@@ -533,10 +580,12 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                                                      "или добавьте еды в свой рацион")
 
             else:
+                session = session_factory()
                 if int(self.calories_result) <= int(self.result_bmr):
                     self.result = 'Well done!'
                 if int(self.calories_result) > int(self.result_bmr):
                     self.result = 'So baad maan!'
+                user_id = self.login_app.login()
 
                 row = self.tableWidget_5.rowCount()
                 self.tableWidget_5.insertRow(row)
@@ -544,6 +593,12 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.tableWidget_5.setItem(row, 1, QTableWidgetItem(str(self.calories_result)))
                 self.tableWidget_5.setItem(row, 2, QTableWidgetItem(str(self.result_bmr)))
                 self.tableWidget_5.setItem(row, 3, QTableWidgetItem(str(self.result)))
+                new_result = DayResults(date=str(datetime.date(datetime.now())), get_in_day=int(self.calories_result),
+                                        norma=int(self.result_bmr), result=str(self.result),
+                                        user_id=user_id)
+                session.add(new_result)
+                session.commit()
+                session.close()
 
 
 sys._excepthook = sys.excepthook
@@ -558,6 +613,8 @@ sys.excepthook = exception_hook
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    widget = LoginApp()
+    widget.show()
     ex = Calorimeter()
     ex.show()
     sys.exit(app.exec())

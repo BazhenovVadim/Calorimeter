@@ -9,11 +9,16 @@ from data_base import get_session
 from model import Token
 from services import UserService, AuthService
 from .api_controllers import user_controller, product_controller, day_result_controller
+from typing import Annotated
+
+from fastapi import Depends, FastAPI
 
 app = FastAPI(docs_url="/")
 app.include_router(user_controller)
 app.include_router(product_controller)
 app.include_router(day_result_controller)
+
+
 
 
 @app.post("/token")

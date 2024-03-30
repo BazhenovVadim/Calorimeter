@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from data_base import Products, get_session
+from data_base import Products, get_session, User
 from model import ProductIn, ProductOut
-from services import ProductsService
+from services import ProductsService, AuthService
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -42,27 +42,32 @@ async def create_product(product_dto: ProductIn, session: AsyncSession = Depends
 
 
 @router.put("/", response_model=ProductOut)
-async def update_product(product_dto: ProductOut, session: AsyncSession = Depends(get_session)):
-    product = await ProductsService.get_product_by_id(product_dto.product_id, session)
-    if product:
-        product.update(product_dto.model_dump())
-        await session.commit()
-        return ProductOut(**product.to_dict())
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Продукта с таким id не существует")
-
+async def update_product(product_dto: ProductOut,resource_id: int, session: AsyncSession = Depends(get_session),
+                         current_user: User = Depends(AuthService.get_current_user)):
+    if current_user.user_name == "vadik":
+        product = await ProductsService.get_product_by_id(product_dto.product_id, session)
+        if product:
+            product.update(product_dto.model_dump())
+            await session.commit()
+            return ProductOut(**product.to_dict())
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Продукта с таким id не существует")
+    else:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Вам отказано в доступе")
 
 @router.delete("/")
-async def delete_product(product_name: str, session: AsyncSession = Depends(get_session)):
-    existing_product_by_name = await ProductsService.get_product_by_name(product_name, session)
+async def delete_product(product_name: str, resource_id: int, session: AsyncSession = Depends(get_session),
+                         current_user: User = Depends(AuthService.get_current_user)):
+    if current_user.user_name == "vadik":
+        existing_product_by_name = await ProductsService.get_product_by_name(product_name, session)
 
-    if not existing_product_by_name:
-        raise HTTPException(status_code=400, detail=" Not Product with the same name")
-    product = await ProductsService.get_product_by_name(product_name, session)
-    if product:
-        await session.delete(product)
-        await session.commit()
-        return "status OK"
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Продукта с таким названием не существует")
-
-#TODO: возможность изменять и создавать продукт только для админа(замочек сделать)
-
+        if not existing_product_by_name:
+            raise HTTPException(status_code=400, detail=" Not Product with the same name")
+        product = await ProductsService.get_product_by_name(product_name, session)
+        if product:
+            await session.delete(product)
+            await session.commit()
+            return "status OK"
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Продукта с таким названием не существует")
+    else:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Вам отказано в доступе")
+# TODO: возможность изменять и создавать продукт только для админа(замочек сделать)
