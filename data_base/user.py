@@ -12,6 +12,7 @@ class User(BaseSQLAlchemyModel):
     login = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
+
     day_result = relationship("DayResults", back_populates="user")
 
     def __str__(self):

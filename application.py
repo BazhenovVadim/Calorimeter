@@ -19,55 +19,36 @@ from ui_files.calorimeter_designer import Ui_MainWindow
 
 # from metods_to_calculate import harris_benedict_metod, mifflin_metod
 
-class LoginApp(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.init_ui()
-
-    def init_ui(self):
-        self.setWindowTitle('Login')
-        layout = QVBoxLayout()
-        self.username_input = QLineEdit(self)
-        self.username_input.setPlaceholderText('Username')
-        layout.addWidget(self.username_input)
-        self.password_input = QLineEdit(self)
-        self.password_input.setPlaceholderText('Password')
-        layout.addWidget(self.password_input)
-        login_button = QPushButton('Login')
-        login_button.clicked.connect(self.login)
-        layout.addWidget(login_button)
-        self.result_label = QLabel(self)
-        layout.addWidget(self.result_label)
-        self.setLayout(layout)
-
-    def login(self):
-        username = self.username_input.text()
-        password = self.password_input.text()
-
-        response = requests.post("http://127.0.0.1:8000/token", data={"username": username, "password": password})
-
-        if response.status_code == 200:
-            token = response.json().get("access_token")
-            user_response = requests.get("http://127.0.0.1:8000/user/get_user_id",
-                                         headers={"Authorization": f"Bearer {token}"})
-            if user_response.status_code == 200:
-                current_user_id = int(user_response.content)
-                self.result_label.setText(f"Current User ID: {current_user_id}")
-                return current_user_id
-            else:
-                self.result_label.setText("Failed to get current user")
-        else:
-            self.result_label.setText("Login failed")
+# class LoginApp(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.init_ui()
+#
+#     def init_ui(self):
+#         self.setWindowTitle('Login')
+#         layout = QVBoxLayout()
+#         self.username_input = QLineEdit()
+#         self.username_input.setPlaceholderText('Username')
+#         layout.addWidget(self.username_input)
+#         self.password_input = QLineEdit()
+#         self.password_input.setPlaceholderText('Password')
+#         layout.addWidget(self.password_input)
+#         login_button = QPushButton('Login')
+#         login_button.clicked.connect(self.login)
+#         layout.addWidget(login_button)
+#         self.result_label = QLabel()
+#         layout.addWidget(self.result_label)
+#         self.setLayout(layout)
+#
+#
 
 
 class Calorimeter(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.login_app = LoginApp()
-        layout = QVBoxLayout()
-        layout.addWidget(self.login_app)
-        self.setLayout(layout)
+        self.current_user_id = None
+
         self.connection_signals()
         self.age = None
         self.weight = None
@@ -231,7 +212,27 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
         self.pushButton_table3_clear_all.clicked.connect(self.clear_all_table3)
         self.pushButton_table3_clear_one.clicked.connect(self.clear_one_table3)
         self.pushButton_table2_add_to_table3.clicked.connect(self.add_result_ration_to_table3)
+        self.login_button.clicked.connect(self.login)
 
+    def login(self):
+        self.username = self.username_input.text()
+        self.password = self.password_input.text()
+
+        self.response = requests.post("http://127.0.0.1:8000/token", data={"username": self.username, "password": self.password})
+
+        if self.response.status_code == 200:
+            self.token = self.response.json().get("access_token")
+            self.user_response = requests.get("http://127.0.0.1:8000/user/get_user_id",
+                                         headers={"Authorization": f"Bearer {self.token}"})
+            if self.user_response.status_code == 200:
+                self.current_user_id = int(self.user_response.content)
+                print(self.current_user_id)
+                self.result_label.setText(f"Current User ID: {self.current_user_id}")
+
+            else:
+                self.result_label.setText("Failed to get current user")
+        else:
+            self.result_label.setText("Login failed")
     def check_gender(self):
         if self.radioButton_man.isChecked():
             self.gender = self.radioButton_man.text()
@@ -580,12 +581,13 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                                                      "или добавьте еды в свой рацион")
 
             else:
+
                 session = session_factory()
                 if int(self.calories_result) <= int(self.result_bmr):
                     self.result = 'Well done!'
                 if int(self.calories_result) > int(self.result_bmr):
                     self.result = 'So baad maan!'
-                user_id = self.login_app.login()
+                print(self.current_user_id)
 
                 row = self.tableWidget_5.rowCount()
                 self.tableWidget_5.insertRow(row)
@@ -595,10 +597,12 @@ class Calorimeter(QMainWindow, Ui_MainWindow):
                 self.tableWidget_5.setItem(row, 3, QTableWidgetItem(str(self.result)))
                 new_result = DayResults(date=str(datetime.date(datetime.now())), get_in_day=int(self.calories_result),
                                         norma=int(self.result_bmr), result=str(self.result),
-                                        user_id=user_id)
+                                        user_id=self.current_user_id
+                                        )
                 session.add(new_result)
                 session.commit()
                 session.close()
+
 
 
 sys._excepthook = sys.excepthook
@@ -613,8 +617,9 @@ sys.excepthook = exception_hook
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    widget = LoginApp()
-    widget.show()
+    widget = Calorimeter()
+    widget.login_window.show()
+
     ex = Calorimeter()
     ex.show()
     sys.exit(app.exec())

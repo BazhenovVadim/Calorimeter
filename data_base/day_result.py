@@ -12,7 +12,7 @@ class DayResults(BaseSQLAlchemyModel):
     get_in_day = Column(Integer, nullable=False)
     norma = Column(Integer, nullable=False)
     result = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey("user.user_id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.user_id"))
 
     user = relationship("User", back_populates="day_result")
     def __str__(self):

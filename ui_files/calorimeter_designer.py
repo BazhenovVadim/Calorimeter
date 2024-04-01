@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QHeaderView
+from PyQt5.QtWidgets import QHeaderView, QVBoxLayout, QLineEdit, QPushButton, QLabel
 
 
 class Ui_MainWindow(object):
@@ -18,6 +18,22 @@ class Ui_MainWindow(object):
         MainWindow.resize(511, 468)
         MainWindow.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         MainWindow.setStyleSheet("#MainWindow{border-image:url(back.jpg)}")
+
+        self.login_window = QtWidgets.QWidget()
+        self.login_window.setWindowTitle('Login')
+        self.layout1 = QVBoxLayout()
+        self.username_input = QLineEdit()
+        self.username_input.setPlaceholderText('Username')
+        self.layout1.addWidget(self.username_input)
+        self.password_input = QLineEdit()
+        self.password_input.setPlaceholderText('Password')
+        self.layout1.addWidget(self.password_input)
+        self.login_button = QPushButton('Login')
+
+        self.layout1.addWidget(self.login_button)
+        self.result_label = QLabel()
+        self.layout1.addWidget(self.result_label)
+        self.login_window.setLayout(self.layout1)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_21 = QtWidgets.QVBoxLayout(self.centralwidget)
